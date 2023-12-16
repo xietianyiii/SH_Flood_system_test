@@ -159,7 +159,6 @@ const options2 = [
 
 .box-card {
   width: 360px;
-  height: 330px;
   position: absolute;
   transform: translate(-50%, -50%);
 }
@@ -169,7 +168,6 @@ const options2 = [
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
 }
 .Title {
-  height: 100px;
   display: flex;
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */
@@ -183,7 +181,7 @@ const options2 = [
   margin-bottom: 8px; /* 间距大小可以根据需要调整 */
 }
 .head{
-  margin-bottom: 15px; /* 间距大小可以根据需要调整 */
+  margin-bottom: -18px; /* 间距大小可以根据需要调整 */
 }
 
 .head-title{
@@ -197,13 +195,11 @@ const options2 = [
   color: black; /* 字体颜色为黑色 */
 }
 .box-body{
-  height: 160px;
   display: grid;
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */
 }
 .body-select {
-  height: 20px;
   display: flex;
   align-items: center; /* 垂直居中对齐 */
   margin-bottom: 20px; /* 间距大小可以根据需要调整 */

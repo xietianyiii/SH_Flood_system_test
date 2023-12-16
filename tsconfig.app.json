@@ -20,7 +20,8 @@
     "types": [
       "node",
       "element-plus/global",
-       "@types/mapbox-gl"
+      "@types/node", 
+      "@types/mapbox-gl"
     ],
   }
 }
