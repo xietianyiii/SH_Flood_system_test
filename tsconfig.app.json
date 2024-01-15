@@ -9,6 +9,9 @@
     "src/**/__tests__/*"
   ],
   "compilerOptions": {
+    "outDir": "dist",
+    "strict": false,
+    "allowJs": true,
     "composite": true,
     "moduleResolution": "node",
     "baseUrl": ".",

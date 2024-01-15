@@ -20,61 +20,61 @@
 
         <div class="flex-grow" /> <!-- //弹性空间 -->
 
-        <router-link to="/function1" class="menu-link">
-          <el-menu-item index="1" class="el-menu">
-            <div class="block">
-              <div class="role1_cn">
-                <i class="logoset logo1"></i>
-                <span>特大淹没概率</span>
-              </div>
-              <div class="role1_en">Function 1</div>
+        <el-menu-item index="1">
+          <div class="block">
+            <div class="role1_cn">
+              <i class="logoset logo1"></i>
+              <span>功能 1</span>
             </div>
-          </el-menu-item>
-        </router-link>
-
+            <div class="role1_en">Function 1</div>
+          </div>
+        </el-menu-item>
         <el-sub-menu index="2">
           <template #title>
             <div class="block">
               <div class="role1_cn">
                 <i class="logoset logo1"></i>
-                <span>最大淹没情况</span>
+                <span>功能 2</span>
               </div>
               <div class="role1_en">Function 2</div>
             </div>
           </template>
-
-          <router-link to="/function21" class="menu-link">
-            <el-menu-item index="2-1" class="el-menu">水深</el-menu-item>
-          </router-link>
-
-          <router-link to="/function22" class="menu-link">
-            <el-menu-item index="2-2" class="el-menu">范围</el-menu-item>
-          </router-link>
-
-
+          <el-menu-item index="2-1">item one</el-menu-item>
+          <el-menu-item index="2-2">item two</el-menu-item>
+          <el-menu-item index="2-3">item three</el-menu-item>
+          <el-sub-menu index="2-4">
+            <template #title>item four</template>
+            <el-menu-item index="2-4-1">item one</el-menu-item>
+            <el-menu-item index="2-4-2">item two</el-menu-item>
+            <el-menu-item index="2-4-3">item three</el-menu-item>
+          </el-sub-menu>
         </el-sub-menu>
-
-        <router-link to="/function3" class="menu-link">
-          <el-menu-item index="3" class="el-menu">
-            <div class="block">
-              <div class="role1_cn">
-                <i class="logoset logo1"></i>
-                <span>淹没情况模拟</span>
-              </div>
-              <div class="role1_en">Function 3</div>
+        <el-menu-item index="3" disabled>
+          <div class="block">
+            <div class="role1_cn">
+              <i class="logoset logo1"></i>
+              <span>功能 3</span>
             </div>
-          </el-menu-item>
-        </router-link>
+            <div class="role1_en">Function 3</div>
+          </div>
+        </el-menu-item>
+        <el-menu-item index="4">
+          <div class="block">
+            <div class="role1_cn">
+              <i class="logoset logo1"></i>
+              <span>功能 4</span>
+            </div>
+            <div class="role1_en">Function 4</div>
+          </div>
+        </el-menu-item>
 
-
-
-        <!-- <div class="time-container">
+        <div class="time-container">
           <div>2023/8/8</div>
           <div class="datatime">
             <div class="week">星期二</div>
             <div class="time">15:30</div>
           </div>
-        </div> -->
+        </div>
 
 
 
@@ -103,13 +103,7 @@
         <!-- 右侧扩展面板按钮 -->
         <button class="expand-btn" @click="toggleSidebar">
           <el-icon class="expand-icon">
-            <!-- 使用条件语句根据侧边栏状态渲染不同的图标 -->
-            <i v-if="!sidebarOpen" class="menu-icon">
-              <Menu />
-            </i>
-            <i v-else class="close-icon">
-              <CloseBold />
-            </i>
+            <Menu />
           </el-icon>
         </button>
       </div>
@@ -128,8 +122,6 @@
 <script lang="ts" setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import sider from '@/components/Mobilenav.vue'
-import Drawer from '@/components/Drawer.vue'
-
 // 定义侧边栏开关状态
 const sidebarOpen = ref(false);
 
@@ -149,7 +141,6 @@ const isDesktop = ref(window.innerWidth >= 768)
 
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
-
 }
 
 const handleResize = () => {
@@ -261,7 +252,7 @@ onBeforeUnmount(() => {
     font-weight: bold;
     line-height: 5px;
     color: #c0c5c6;
-    padding-left: 28px;
+    padding-left: 4px;
     font-family: Arial, Helvetica, sans-serif;
   }
 
@@ -301,25 +292,8 @@ onBeforeUnmount(() => {
     flex-direction: column;
     justify-content: center;
     color: #fff;
-    margin-right: 45vw;
-    
+    margin-left: 30vw;
   }
-
-  .menu-link {
-    width: 100%;
-    /* 添加其他可能需要的样式 */
-  }
-
-  .el-menu-item {
-    height: 8vh;
-  }
-
-  .el-menu-item,
-  .menu-link {
-    border: none;
-    /* 移除边框 */
-  }
-
 }
 
 /* 响应式设计 - 移动端 */
@@ -330,8 +304,7 @@ onBeforeUnmount(() => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-image: linear-gradient(-145deg, #3c83ad 40%, #7aabec 100%);
-    background-image: linear-gradient(-305deg, white 4%, #7aabec 20%, #3c83ad 120%);
+    background-color: #3498db;
     /* 主色调 */
     color: #ffffff;
     /* 文字颜色 */
@@ -404,7 +377,7 @@ onBeforeUnmount(() => {
     /* 侧边栏宽度 */
     height: 100vh;
     /* 占满整个视口高度 */
-    background-image: linear-gradient(-225deg, #3c83ad 40%, #7aabec 100%);
+    background-color: #f0f0f0;
     transition: transform 0.3s ease;
     transform: translateX(-100%);
     /* 初始时隐藏侧边栏 */
@@ -416,4 +389,5 @@ onBeforeUnmount(() => {
     transform: translateX(0);
     /* 显示侧边栏 */
   }
-}</style>
+}
+</style>

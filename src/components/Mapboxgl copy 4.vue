@@ -5,17 +5,16 @@
             <LoadingOverlay v-if="isLoading" />
             <div ref="mapContainer" class="map-container"></div>
 
-            <div>
-                <!-- 引用 Menu.vue 组件，并通过 props 传递 updateLevels 方法 -->
-                <Menu :updateLevels="updateLevels" @selectChange="handleSelectChange" @confirm="handleConfirm"
-                    @generateMap="handleGenerateMap" />
-                <!-- 在这里使用选择框的值 -->
-                <div class="test-show">
-                    <p>1：{{ selectedLevels[0] }}</p>
-                    <p>2：{{ selectedLevels[1] }}</p>
-                    <p>3：{{ selectedLevels[2] }}</p>
-                    <p>相乘结果：{{ multiplicationResult }}</p>
-                </div>
+            <!-- 引用 Menu.vue 组件，并通过 props 传递 updateLevels 方法 -->
+            <Menu :updateLevels="updateLevels" @selectChange="handleSelectChange" @confirm="handleConfirm"
+                @generateMap="handleGenerateMap" />
+
+            <!-- 在这里使用选择框的值 -->
+            <div class="test-show">
+                <p>1：{{ selectedLevels[0] }}</p>
+                <p>2：{{ selectedLevels[1] }}</p>
+                <p>3：{{ selectedLevels[2] }}</p>
+                <p>相乘结果：{{ multiplicationResult }}</p>
             </div>
 
             <div class="color-container">
@@ -32,25 +31,22 @@
                 <img src="@/assets/icons/导航.svg" alt="导航图标" class="icon-center" style="width: 17px; height: 17px;" />
             </button>
 
-            <div class="inundation-simulate-slide" v-if="state.showSlide">
-                <el-card shadow="always" class="tipcard"> {{ formatTooltip(selectedIndex) }} </el-card>
-                <div class="slider">
-                    <div class="slider-demo-block">
-                        <el-button link circle class="btn-container" @click="toggleIconAndAutoSlide">
-                            <el-icon v-if="showPlayIcon" :size="45" class="play">
-                                <VideoPlay />
-                            </el-icon>
-                            <el-icon v-show="!showPlayIcon" :size="45" class="pause">
-                                <VideoPause />
-                            </el-icon>
-                        </el-button>
-                        <el-slider v-model="selectedIndex" :step="1" :min="0" :max="urls.length - 1" show-stops
-                            :format-tooltip="formatTooltip" :marks="marks" class="custom-slider" />
-                    </div>
+            <el-card shadow="always" class="tipcard"> {{ formatTooltip(selectedIndex) }} </el-card>
+            <div class="slider">
+                <div class="slider-demo-block">
+                    <el-button link circle class="btn-container" @click="toggleIconAndAutoSlide">
+                        <el-icon v-if="showPlayIcon" :size="45" class="play">
+                            <VideoPlay />
+                        </el-icon>
+                        <el-icon v-show="!showPlayIcon" :size="45" class="pause">
+                            <VideoPause />
+                        </el-icon>
+                    </el-button>
+                    <el-slider v-model="selectedIndex" :step="1" :min="0" :max="urls.length - 1" show-stops
+                        :format-tooltip="formatTooltip" :marks="marks" class="custom-slider" />
+
                 </div>
             </div>
-
-
         </div>
     </div>
 
@@ -59,7 +55,6 @@
         <div>
             <LoadingOverlay v-if="isLoading" />
             <div ref="mapContainer" class="map-container"></div>
-            
             <div class="color-container">
                 <div class="color-intro">淹没深度(单位m)</div>
                 <div class="color-bar">
@@ -74,43 +69,41 @@
                 <img src="@/assets/icons/导航.svg" alt="导航图标" class="icon-center" style="width: 17px; height: 17px;" />
             </button>
 
-            <div class="inundation-simulate-slide" v-if="state.showSlide">
-                <el-card shadow="always" class="tipcard"> {{ formatTooltip(selectedIndex) }} </el-card>
-                <div class="slider">
-                    <div class="slider-demo-block">
-                        <el-button link circle class="btn-container" @click="toggleIconAndAutoSlide">
-                            <el-icon v-if="showPlayIcon" :size="45" class="play">
-                                <VideoPlay />
-                            </el-icon>
-                            <el-icon v-show="!showPlayIcon" :size="45" class="pause">
-                                <VideoPause />
-                            </el-icon>
-                        </el-button>
-                        <el-slider v-model="selectedIndex" :step="1" :min="0" :max="urls.length - 1" show-stops
-                            :format-tooltip="formatTooltip" :marks="marks" class="custom-slider" />
-                    </div>
+            <el-card shadow="always" class="tipcard"> {{ formatTooltip(selectedIndex) }} </el-card>
+            <div class="slider">
+                <div class="slider-demo-block">
+                    <el-button link circle class="btn-container" @click="toggleIconAndAutoSlide">
+                        <el-icon v-if="showPlayIcon" :size="45" class="play">
+                            <VideoPlay />
+                        </el-icon>
+                        <el-icon v-show="!showPlayIcon" :size="45" class="pause">
+                            <VideoPause />
+                        </el-icon>
+                    </el-button>
+                    <el-slider v-model="selectedIndex" :step="1" :min="0" :max="urls.length - 1" show-stops
+                        :format-tooltip="formatTooltip" :marks="marks" class="custom-slider" />
+
                 </div>
             </div>
-
         </div>
     </div>
 </template>
   
 <script setup lang="ts">
 import { reactive, ref, computed, onMounted, watch, onUnmounted, onBeforeUnmount } from 'vue';
-import { ElMessage } from 'element-plus';
 import LoadingOverlay from '../components/LoadingOverlay.vue'; // 导入加载中提示组件
 import type { CSSProperties } from 'vue'
 import mapboxgl, { Map } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import color from '@/components/colorcanvas.vue'
 import Menu from '@/components/Menu.vue';
-import { state } from '@/components/store';
-
-const isLoading = ref(false); // 控制加载状态
 
 const selectedLevels = ref(['', '', '']);
-const multiplicationResult = ref(0); // 默认值为1，确保初始值不影响相乘结果
+const multiplicationResult = ref(2); // 默认值为1，确保初始值不影响相乘结果
+const selectedIndex = ref(0); // 当前选择的索引
+const selectedUrl = computed(() => {
+    return urls.value[selectedIndex.value];
+});
 
 // 更新选择框的值的方法
 const updateLevels = (levels) => {
@@ -124,8 +117,8 @@ const handleSelectChange = (levels) => {
 
 // 处理确认按钮点击的方法
 const handleConfirm = (result) => {
-    console.log('Multiplication Result in Map.vue:', result);
-    multiplicationResult.value = result; // 更新相乘结果
+    console.log('Multiplication Result in Map.vue:', result);// 更新selectedMapArrayName
+    multiplicationResult.value = result;
 };
 
 // 处理生成地图按钮点击的方法
@@ -142,8 +135,6 @@ const handleGenerateMap = () => {
         }
         // Check if the dynamically constructed array exists in mapArrays
         if (selectedMapArrayName in mapArrays) {
-            ElMessage.success('正在生成中,请稍后……');
-
             const selectedMapArray = mapArrays[selectedMapArrayName];
             console.log('Selected Map Array:', selectedMapArray);
 
@@ -160,23 +151,14 @@ const handleGenerateMap = () => {
                 }
             });
 
-
             // Call modifyMapLayers with the selected URLs
-            // 初始化地图
-            isLoading.value = true; // 地图加载中，显示LoadingOverlay
-            // 初始化地图
-            initMap();
-
-            map?.on('load', () => {
-                playTimeSliderOnce(); // 在地图加载完成后自动播放时间进度条
-            });
+            modifyMapLayers(map, selectedMapArray, layerNames, sourceNames);
 
         } else {
             console.error(`Array ${selectedMapArrayName} does not exist in mapArrays.`);
-            ElMessage.error('服务器内的数据分别包含降雨、水位和潮位一级至五级的数据，你选择的数据还未录入服务器。')
         }
     } else {
-        ElMessage.error('服务器内不存在的数据')
+        console.error("Invalid multiplicationResult.value. It should be between 1 and 125.");
     }
 };
 
@@ -186,85 +168,10 @@ const handleGenerateMap = () => {
 
 // 地图地址数组
 const mapArrays = {
-    mapArrays125: [
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_0",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_32",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_66",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_167",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_179",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_215",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_220",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_225",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_228",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_229",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_230",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_232",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_233",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_234",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_235",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_236",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_237",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_238",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_239",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_240",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_241",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_242",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_243",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_244",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_245",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_246",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_247",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_248",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_249",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_250",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_251",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_252",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_253",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_254",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_255",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_256",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_257",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_292",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:Pz30_Rz40_Tz0d8_384",
-    ],
-    mapArrays27: ["http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:0",
+    mapArrays1: [
         "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test032",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test066",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test167",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test179",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test215",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test220",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test225",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test228",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:2291",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test230",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test232",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test233",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test234",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test235",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test236",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test237",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:2381",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test239",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test240",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:2411",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test242",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:2431",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test244",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:2451",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test246",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:2471",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test248",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test249",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test250",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test251",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test252",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test253",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test254",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:2551",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test256",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test257",
-        "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test292",
+    ],
+    mapArrays2: ["http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:0",
         "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:384",
     ],
     // Add more mapArraysX if needed
@@ -354,8 +261,7 @@ var mapstyle = mapStyles[0];
 const layerNames: string[] = [];
 const sourceNames: string[] = [];
 
-const urls = ref<string[]>([
-    "http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:30test254",
+const urls = ref<string[]>(["http://47.113.180.32:8090/geoserver/flood/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=flood:384",
 ]);
 
 
@@ -426,6 +332,7 @@ const modifyMapLayers = (map, selectedUrls, layerNames, sourceNames) => {
         // 将图层名称存储到数组中
         layerNames.push(layerId);
         sourceNames.push(sourceId);
+
     });
 };
 
@@ -455,15 +362,6 @@ const initMap = () => {
     }
 };
 
-//修改地图的函数
-const modifyMap = () => {
-    if (mapContainer.value) {
-
-        map.on('style.load', () => {
-            modifyMapLayers(map, urls, layerNames, sourceNames);
-        });
-    }
-};
 
 const initializeMap = () => {
     if (mapContainer.value) {
@@ -499,42 +397,17 @@ const initializeMap = () => {
     }
 };
 
-const setstyleMap = () => {
-    if (mapContainer.value) {
-        if (map) {
-            // 如果地图已存在，移除它
-            map.remove();
-        }
-
-        // 重新创建地图
-        map = new mapboxgl.Map({
-            container: mapContainer.value,
-            style: mapstyle, // 初始样式
-            center: [121.417899486, 31.01916171],
-            zoom: 7.7,
-            logoPosition: "bottom-right",   //移动至右下角
-            attributionControl: false, // 隐藏商标信息
-        });
-
-        // 添加导航控件
-        map.addControl(new mapboxgl.NavigationControl());
-    }
-};
-
 const setMapStyle = (styleIndex: number) => {
     if (map) {
         // 设置新的地图样式
         mapstyle = mapStyles[styleIndex];
         // 初始化地图
-        setstyleMap();
+        initializeMap();
     }
 };
 
 
-const selectedIndex = ref(0); // 当前选择的索引
-const selectedUrl = computed(() => {
-    return urls.value[selectedIndex.value];
-});
+
 
 let map: mapboxgl.Map | null = null; // 使用 mapboxgl.Map 类型
 
@@ -566,10 +439,16 @@ const stopAutoSlide = () => {
 };
 
 // 当 selectedIndex 变化时停止自动滑动
-watch(selectedIndex, () => {
-    if (!isPlaying.value && intervalId) {
-        clearInterval(intervalId);
-        intervalId = null;
+watch(selectedIndex, (newIndex) => {
+    if (map) {
+        const selectedMapArray = mapArrays[`mapArrays${multiplicationResult.value}`];
+        if (selectedMapArray && selectedMapArray[newIndex]) {
+            const newUrl = selectedMapArray[newIndex];
+            // 更新 selectedMapArray 中的当前 URL
+            selectedMapArray.splice(newIndex, 1, newUrl);
+            // 执行修改地图图层的函数，更新地图图层
+            modifyMapLayers(map, selectedMapArray, layerNames, sourceNames);
+        }
     }
 });
 
@@ -641,15 +520,15 @@ const flyToLocation = () => {
     }
 };
 
-
+const isLoading = ref(true); // 控制加载状态
 
 onMounted(() => {
     window.addEventListener('resize', handleResize)
-    isLoading.value = true; // 地图加载中，显示LoadingOverlay
+    isLoading.value = false; // 地图加载中，显示LoadingOverlay
     // 初始化地图
-    setstyleMap();
+    initMap();
     map?.on('load', () => {
-        playTimeSliderOnce(); // 在地图加载完成后自动播放时间进度条
+        isLoading.value = false;
     });
 });
 
@@ -680,13 +559,13 @@ onUnmounted(() => {
 /* 响应式设计 - 电脑端 */
 @media screen and (min-width: 768px) {
 
-    /* 电脑端的样式 */
     .test-show {
         position: absolute;
         top: 200px;
         left: 20px;
     }
 
+    /* 电脑端的样式 */
     .map-container {
         width: 100vw;
         height: 91.6vh;

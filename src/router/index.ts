@@ -1,17 +1,40 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import test from '../views/test.vue'
+import Function1Component from '../components/function1.vue'
+import Function21Component from '../components/function2-1.vue'
+import Function22Component from '../components/function2-2.vue'
+import Function3Component from '../components/function3.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      redirect: '/home'
+      redirect: '/flood'
     },
     {
-      path: '/home',
-      name: 'home',
-      component: test, 
+      path: '/flood',
+      name: 'flood',
+      component: Function1Component, 
+    },{
+      path: '/function1',
+      name: 'function1',
+      component: Function1Component // 导入功能一对应的组件
+    },
+    {
+      path: '/function21',
+      name: 'function21',
+      component: Function21Component // 导入功能四对应的组件
+    },
+    {
+      path: '/function22',
+      name: 'function22',
+      component: Function22Component // 导入功能四对应的组件
+    },
+    {
+      path: '/function3',
+      name: 'function3',
+      component: Function3Component // 导入功能四对应的组件
     },
   ]
 
