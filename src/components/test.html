@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wind Particle System with Three.js</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+        // Scene setup
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Particle system settings
+        var particleCount = 10000; // Number of particles
+
+        // Create BufferGeometry instead of Geometry
+        var particles = new THREE.BufferGeometry();
+        var positions = new Float32Array(particleCount * 3); // Array to hold position data for each particle
+
+        // Particle material settings
+        var particleMaterial = new THREE.PointsMaterial({
+            color: 0x00ffff,       // Particle color
+            size: 1,               // Particle size
+            transparent: true,
+            opacity: 0.5           // Transparency
+        });
+
+        // Create particles and add their positions to the geometry
+        for (var i = 0; i < particleCount; i++) {
+            var pX = Math.random() * 2000 - 1000;
+            var pY = Math.random() * 2000 - 1000;
+            var pZ = Math.random() * 2000 - 1000;
+
+            // Add positions for each particle (3 values per particle: x, y, z)
+            positions[i * 3] = pX;
+            positions[i * 3 + 1] = pY;
+            positions[i * 3 + 2] = pZ;
+        }
+
+        // Set the positions array as the particle system's position attribute
+        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+        // Create particle system
+        var particleSystem = new THREE.Points(particles, particleMaterial);
+        scene.add(particleSystem);
+
+        // Camera position
+        camera.position.z = 1000;
+
+        // Variables to simulate wind
+        var windSpeed = 0.5;   // Wind speed factor
+        var windDirection = new THREE.Vector3(1, 0, 0); // Wind direction (e.g., along X axis)
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Update particles positions based on wind speed and direction
+            var positions = particleSystem.geometry.attributes.position.array;
+
+            for (var i = 0; i < particleCount; i++) {
+                var index = i * 3;
+                var particle = new THREE.Vector3(positions[index], positions[index + 1], positions[index + 2]);
+
+                // Simulate wind by adding velocity
+                particle.add(windDirection.clone().multiplyScalar(windSpeed));
+
+                // Update the particle's new position in the array
+                positions[index] = particle.x;
+                positions[index + 1] = particle.y;
+                positions[index + 2] = particle.z;
+
+                // Reset particles that move out of bounds
+                if (particle.x > 1000) particle.x = -1000;
+                if (particle.x < -1000) particle.x = 1000;
+                if (particle.y > 1000) particle.y = -1000;
+                if (particle.y < -1000) particle.y = 1000;
+                if (particle.z > 1000) particle.z = -1000;
+                if (particle.z < -1000) particle.z = 1000;
+            }
+
+            // Notify that the positions attribute needs updating
+            particleSystem.geometry.attributes.position.needsUpdate = true;
+
+            // Render scene
+            renderer.render(scene, camera);
+        }
+
+        // Adjust the camera and renderer size on window resize
+        window.addEventListener('resize', function() {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+
+        // Start animation
+        animate();
+    </script>
+</body>
+</html>

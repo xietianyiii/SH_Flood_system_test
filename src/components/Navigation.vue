@@ -3,8 +3,7 @@
   <div v-if="isDesktop">
     <!-- 电脑端的导航菜单内容 -->
     <div class="header-container">
-      <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" background-color="#545c64"
-        text-color="#fff" active-text-color="#ffd04b" @select="handleSelect">
+      <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
 
         <div class="logo-container">
           <div class="logo">
@@ -13,58 +12,50 @@
             </a>
           </div>
           <div class="title-text">
-            <div class="title_cn">上海市洪涝灾害预测系统</div>
-            <div class="title_en">Shanghai Flood Disaster Prediction System</div>
+            <div class="title_cn">洪涝快速预报系统</div>
+            <div class="title_en">Rapid Flood Forecast System</div>
           </div>
         </div>
 
         <div class="flex-grow" /> <!-- //弹性空间 -->
 
-        <router-link to="/function1" class="menu-link">
+        <router-link to="/forecasting" class="menu-link">
           <el-menu-item index="1" class="el-menu">
             <div class="block">
               <div class="role1_cn">
                 <i class="logoset logo1"></i>
-                <span>特大淹没概率</span>
+                <span>淹没预测</span>
               </div>
-              <div class="role1_en">Function 1</div>
+              <div class="role1_en">Inundation prediction</div>
             </div>
           </el-menu-item>
         </router-link>
 
-        <el-sub-menu index="2">
-          <template #title>
-            <div class="block">
-              <div class="role1_cn">
-                <i class="logoset logo1"></i>
-                <span>最大淹没情况</span>
-              </div>
-              <div class="role1_en">Function 2</div>
-            </div>
-          </template>
-
-          <router-link to="/function21" class="menu-link">
-            <el-menu-item index="2-1" class="el-menu">水深</el-menu-item>
-          </router-link>
-
-          <router-link to="/function22" class="menu-link">
-            <el-menu-item index="2-2" class="el-menu">范围</el-menu-item>
-          </router-link>
-
-
-        </el-sub-menu>
-
-        <router-link to="/function3" class="menu-link">
+         <router-link to="/modeling" class="menu-link">
           <el-menu-item index="3" class="el-menu">
             <div class="block">
               <div class="role1_cn">
                 <i class="logoset logo1"></i>
-                <span>淹没情况模拟</span>
+                <span>实时监测预警</span>
+              </div>
+              <div class="role1_en">Real-time Monitoring</div>
+            </div>
+          </el-menu-item>
+        </router-link>
+       <!--  <a href="/src/components/test6.html" class="menu-link">
+          <el-menu-item index="3" class="el-menu">
+            <div class="block">
+              <div class="role1_cn">
+                <i class="logoset logo1"></i>
+                <span>实时监测预警</span>
               </div>
               <div class="role1_en">Function 3</div>
             </div>
           </el-menu-item>
-        </router-link>
+        </a> -->
+
+
+
 
 
 
@@ -79,7 +70,6 @@
 
 
         <div class="drawer">
-          <Drawer></Drawer>
         </div>
       </el-menu>
 
@@ -119,7 +109,7 @@
     <div class="sidebar" :class="{ 'sidebar-open': sidebarOpen }">
       <!-- 侧边栏内容 -->
       <div class="sidebar-content">
-        <sider class="sidernav"></sider>
+        <sider class="sidernav" @click="toggleSidebar"></sider>
       </div>
     </div>
   </div>
@@ -128,7 +118,6 @@
 <script lang="ts" setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import sider from '@/components/Mobilenav.vue'
-import Drawer from '@/components/Drawer.vue'
 
 // 定义侧边栏开关状态
 const sidebarOpen = ref(false);
@@ -184,6 +173,10 @@ onBeforeUnmount(() => {
     position: relative;
     display: contents;
     justify-content: space-between;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 阴影效果 */
+  }
+  .head{
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 阴影效果 */
   }
 
 
@@ -196,8 +189,8 @@ onBeforeUnmount(() => {
 
   .title-logo {
     height: 4.5vh !important;
-    width: 4.5vh !important;
-    background-image: url(../assets/icons/logo.png);
+    width: 3.5vh !important;
+    background-image: url(../assets/icons/watermap.png);
     -moz-background-size: 100% 100%;
     background-size: 100% 100%;
     box-sizing: border-box;
@@ -207,7 +200,7 @@ onBeforeUnmount(() => {
 
   .title-text {
     font-size: 1.8vh;
-    color: #fff;
+    color: #5b0c0c;
     cursor: default;
     padding-left: 0;
     white-space: nowrap;
@@ -220,13 +213,13 @@ onBeforeUnmount(() => {
 
   .title_en {
     font-size: 1.4vh;
-    line-height: 10px;
-    color: #d9d7d7;
+    font-weight: bold;
+    color: #109cb8;
     font-family: Arial, Helvetica, sans-serif;
   }
 
   .flex-grow {
-    flex-grow: 0.1;
+    flex-grow: 10;
   }
 
   .block {
@@ -244,7 +237,9 @@ onBeforeUnmount(() => {
   }
 
   .logo1 {
-    background-image: url(../assets/icons/logo.png);
+    height: 2vh !important;
+    width: 1.5vh !important;
+    background-image: url(../assets/icons/watermap.png);
   }
 
   .role1_cn {
@@ -257,11 +252,10 @@ onBeforeUnmount(() => {
   }
 
   .role1_en {
-    font-size: 1.4vh;
-    font-weight: bold;
-    line-height: 5px;
-    color: #c0c5c6;
-    padding-left: 28px;
+    font-size: 13px;
+    line-height: 3px;
+    color: #109cb8;
+    padding-left: 17px;
     font-family: Arial, Helvetica, sans-serif;
   }
 
@@ -302,7 +296,7 @@ onBeforeUnmount(() => {
     justify-content: center;
     color: #fff;
     margin-right: 45vw;
-    
+
   }
 
   .menu-link {
@@ -337,10 +331,11 @@ onBeforeUnmount(() => {
     /* 文字颜色 */
     padding: 8px;
     position: relative;
-    height: 38px;
+    height: 44px;
     /* 设置相对定位 */
     z-index: 999;
     /* 确保导航栏位于顶层 */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); 
   }
 
   .left-section {
@@ -416,4 +411,5 @@ onBeforeUnmount(() => {
     transform: translateX(0);
     /* 显示侧边栏 */
   }
-}</style>
+}
+</style>

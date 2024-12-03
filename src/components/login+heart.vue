@@ -10,23 +10,22 @@
             <el-card class="box-card" shadow="always">
 
                 <div class="middle">
-                    <p class="middle-title">SHNU</p>
+                    <p class="middle-title">洪涝快速预报系统</p>
                 </div>
 
                 <div class="card-content">
-
                     <div class="input-container">
                         <el-icon :size="21" class="input-icon">
                             <Message />
                         </el-icon>
-                        <input type="text" class="custom-input" placeholder="Emai address">
+                        <input type="text" class="custom-input" v-model="email" placeholder="Email address">
                     </div>
 
                     <div class="input-container">
                         <el-icon :size="21" class="input-icon">
                             <Lock />
                         </el-icon>
-                        <input type="password" class="custom-input" placeholder="Password">
+                        <input type="password" class="custom-input" v-model="password" placeholder="Password">
                     </div>
 
                     <div class="input-container">
@@ -37,20 +36,18 @@
                         </el-icon>
                         <input type="text" class="custom-input" placeholder="管理员ID(没有请忽略)">
                     </div>
-
                 </div>
 
                 <div class="card-footer">
-                    <el-button plain @click="login" link class="card-button">LET'S GO</el-button>
+                    <el-button plain @click="login" link class="card-button">登录</el-button>
                     <div class="forget-password">
-                        <el-link :underline="false" href="https://element-plus.org" target="_blank" >Forgot
-                            Password?</el-link>
+                        <el-button plain @click="showForgotPassword" link class="card-button-1">忘记密码?</el-button>
                     </div>
                 </div>
-
             </el-card>
+
             <el-card class="box-card-header" shadow="always">
-                <h4 class="card-title">Login</h4>
+                <h4 class="card-title">登录</h4>
 
                 <div class="icon-position">
                     <div class="icon-box">
@@ -70,18 +67,29 @@
                             <ChromeFilled />
                         </el-icon>
                     </div>
-
                 </div>
-
-
             </el-card>
         </div>
     </div>
 </template>
+
   
 <script lang="ts" setup>
-import { ElNotification } from 'element-plus'
+import { ElNotification } from 'element-plus';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router'; // 导入 useRouter 钩子
+import { login as authLogin } from '../auth'; // 引入 `auth.ts` 中的 `login` 函数
+
+
+const showForgotPassword = () => {
+  ElNotification({
+    title: 'Forgot Password',
+    message: '账号: flood, 密码: 123456',
+    type: 'success',
+    offset: -8,
+  });
+};
+
 
 interface Heart {
     text: string;
@@ -95,7 +103,13 @@ interface Heart {
 }
 
 const hearts = ref<Heart[]>([]);
+const email = ref(''); // 保存用户输入的邮箱
+const password = ref(''); // 保存用户输入的密码
+const router = useRouter(); // 使用 useRouter 钩子获取路由实例
 
+// 模拟的正确的账号信息
+const correctEmail = 'flood';
+const correctPassword = '123456';
 
 const handleClick = (e: MouseEvent) => {
     const x = e.pageX;
@@ -134,16 +148,34 @@ function getRandomColorCode() {
     return color;
 }
 
+
+
 const login = () => {
+  if (email.value === correctEmail && password.value === correctPassword) {
     ElNotification({
-        title: 'Success',
-        message: '登陆成功！',
-        type: 'success',
-        offset: -8,
-    })
-}
+      title: 'Success',
+      message: '登陆成功！',
+      type: 'success',
+      offset: -8,
+    });
+
+    authLogin(); // 调用 `auth.ts` 中的 `login` 函数
+    router.push('/forecasting').catch(err => {
+      console.error('跳转错误:', err);
+    });
+  } else {
+    ElNotification({
+      title: 'Error',
+      message: '登录失败，邮箱或密码错误。',
+      type: 'error',
+      offset: -8,
+    });
+  }
+};
+
 
 </script>
+
   
 <style scoped>
 .box {
@@ -300,6 +332,15 @@ const login = () => {
 }
 
 .card-button:hover {
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.15);
+}
+
+.card-button-1 {
+    background-color: transparent;
+    color: #e91e63;
+}
+
+.card-button-1:hover {
     box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.15);
 }
 

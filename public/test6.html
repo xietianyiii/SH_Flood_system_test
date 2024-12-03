@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>降雨曲线图</title>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js'></script>
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        #rainInfo_container {
+            flex: 4;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        #map {
+            flex: 11;
+            height: 100%;
+        }
+
+        .separator {
+            height: 1px;
+            background-color: #c3bcbc;
+            margin: 10px 0;
+            width: 100%;
+            flex-shrink: 0;
+            /* Prevent shrinking in a flex container */
+            align-self: stretch;
+            /* Ensures it stretches across the container */
+        }
+
+        .weatherStation {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 0px;
+            margin-bottom: 5px;
+        }
+
+        #chartArea {
+            height: 200px;
+        }
+
+        #predictionInfo {
+            margin-bottom: 25px;
+        }
+
+        /* Custom Styles for Weather Station */
+        .weatherStationTitle {
+            grid-column: span 2;
+            font-size: 18px;
+            color: #212121;
+        }
+
+        .weatherStationSubtitle {
+            font-size: 16px;
+            color: rgb(95, 99, 104);
+        }
+
+        .weatherStationValue {
+            font-size: 14px;
+            font-weight: bold;
+            color: #212121;
+        }
+
+
+        /* Styles for Rain Threshold Section */
+        .rainThreshold {
+            margin-top: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+
+        .thresholdTitle {
+            grid-column: span 3;
+            font-size: 18px;
+            color: #212121;
+        }
+
+        .unitSubtitle {
+            grid-column: span 3;
+            font-size: 16px;
+            color: rgb(95, 99, 104);
+        }
+
+        .thresholdValue {
+            font-size: 10px;
+            font-weight: bold;
+            color: #212121;
+            grid-column: span 3;
+            /* Spans across three columns for the "降雨量（mm）" label */
+        }
+
+        .thresholdNumbers {
+            font-size: 14px;
+            font-weight: bold;
+            color: #212121;
+            text-align: left;
+            /* Center-aligns each number within its cell */
+        }
+
+
+        .thresholdLabels {
+            font-size: 10px;
+            color: #212121;
+            text-align: left;
+        }
+
+        .thresholdRect {
+            width: 140px;
+            height: 4px;
+            margin: 0px auto;
+        }
+
+        .footerNote {
+            margin-top: 30px;
+            font-size: 13px;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+
+    
+    <div id="rainInfo_container">
+        <div id="predictionInfo">降雨的监测信息</div>
+        <div id="chart_container">
+            <div id="chartArea"></div>
+        </div>
+        <div class="separator"></div>
+        <div class="weatherStation">
+            <div class="weatherStationTitle">降雨站点信息</div>
+            <div class="weatherStationSubtitle">降雨站ID</div>
+            <div class="weatherStationSubtitle">来源</div>
+            <div id="stationId" class="weatherStationValue">58362</div>
+            <div id="source" class="weatherStationValue">Meteostat</div>
+            <div class="weatherStationSubtitle">纬度/经度</div>
+            <div class="weatherStationSubtitle">降雨站点名称</div>
+            <div id="coordinates" class="weatherStationValue">31.1667 / 121.4333</div>
+            <div id="stationName" class="weatherStationValue">Shanghai / Hongqiao</div>
+            <div class="weatherStationSubtitle">省市</div>
+            <div class="weatherStationSubtitle">地区</div>
+            <div class="weatherStationValue">上海市</div>
+            <div class="weatherStationValue">闵行区</div>
+        </div>
+        <div class="separator"></div> <!-- Horizontal line below the weather station -->
+        <div class="rainThreshold">
+            <div class="thresholdTitle">降雨阈值</div>
+            <div class="unitSubtitle">测量单位</div>
+            <div class="thresholdValue">降雨量（mm）</div>
+
+            <!-- Labels for each column -->
+            <div class="thresholdLabels">警戒值</div>
+            <div class="thresholdLabels">危险值</div>
+            <div class="thresholdLabels">极限值</div>
+
+            <!-- Threshold values with a separate class -->
+            <div class="thresholdNumbers">8.0000</div>
+            <div class="thresholdNumbers">12.0000</div>
+            <div class="thresholdNumbers">20.0000</div>
+
+            <!-- Colored rectangles aligned below values -->
+            <div class="thresholdRect" style="background-color: orange;"></div>
+            <div class="thresholdRect" style="background-color: red;"></div>
+            <div class="thresholdRect" style="background-color: #a70606;"></div>
+        </div>
+
+        <div class="separator"></div> <!-- Horizontal line above footer -->
+        <div class="footerNote">洪灾情况为近似数据，仅供参考。如需了解详情，请查看官方资料。</div>
+
+
+
+    </div>
+    <div id="map"></div>
+
+    <script>
+        mapboxgl.accessToken = "pk.eyJ1IjoiMTA2MzgxNjE3OCIsImEiOiJjbGhyZzRnbjMwZGtrM2VzaTg4a3Z1d2I1In0.G4AQfmjpfeOjf7YJVytWhA";
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/1063816178/cm345pm0e002201rc0esq7xtp',
+            center: [121.4737, 31.2304],
+            zoom: 8
+        });
+
+        map.addControl(new mapboxgl.NavigationControl());
+
+        fetch('http://localhost:5000/stations')
+            .then(response => response.json())
+            .then(stations => {
+                const station = stations[0];
+                const marker = new mapboxgl.Marker()
+                    .setLngLat([station.coords[1], station.coords[0]])
+                    .setPopup(new mapboxgl.Popup().setText(station.name))
+                    .addTo(map);
+
+                fetch(`http://localhost:5000/rain_data/${station.id}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok ' + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const options = {
+                            series: [{
+                                name: "降雨量",
+                                data: data.precipitation
+                            }],
+                            chart: {
+                                type: 'area',
+                                height: 220,
+                                zoom: {
+                                    enabled: false
+                                }
+                            },
+                            dataLabels: {
+                                enabled: false
+                            },
+                            stroke: {
+                                curve: 'smooth',
+                                width: 3
+                            },
+                            title: {
+                                text: `${station.name}`,
+                                align: 'left'
+                            },
+                            labels: data.timestamps,
+                            xaxis: {
+                                type: 'datetime',
+                                title: {
+                                    text: ''
+                                },
+                                tickAmount: 5,
+                                labels: {
+                                    style: {
+                                        fontSize: '14px',
+                                    },
+                                    formatter: function (value) {
+                                        let date = new Date(value);
+                                        return `${date.getMonth() + 1}/${date.getDate()}`;
+                                    }
+                                }
+                            },
+                            yaxis: {
+                                title: {
+                                    text: '降雨量 (mm)',
+                                    style: {
+                                        fontSize: '16px',
+                                        fontWeight: 'bold'
+                                    }
+                                },
+                                labels: {
+                                    style: {
+                                        fontSize: '14px'
+                                    }
+                                },
+                                opposite: true
+                            },
+                            tooltip: {
+                                x: {
+                                    formatter: function (value) {
+                                        let date = new Date(value);
+                                        let hours = String(date.getHours()).padStart(2, '0');
+                                        let minutes = String(date.getMinutes()).padStart(2, '0');
+                                        let seconds = String(date.getSeconds()).padStart(2, '0');
+                                        return `${date.getMonth() + 1}/${date.getDate()} ${hours}:${minutes}:${seconds}`;
+                                    }
+                                },
+                                y: {
+                                    formatter: function (value) {
+                                        return `${value} mm`;
+                                    }
+                                }
+                            },
+                            legend: {
+                                horizontalAlign: 'left'
+                            },
+                            fill: {
+                                opacity: 0.4
+                            },
+                            annotations: {
+                                yaxis: [
+                                    {
+                                        y: 8,
+                                        borderColor: 'orange',
+                                        borderWidth: 2,
+                                        strokeDashArray: 0,
+                                        label: {
+                                            text: '警戒值',
+                                            style: {
+                                                color: 'black',
+                                                background: 'yellow'
+                                            }
+                                        }
+                                    },
+                                    {
+                                        y: 12,
+                                        borderColor: 'red',
+                                        borderWidth: 2,
+                                        strokeDashArray: 0,
+                                        label: {
+                                            text: '危险值',
+                                            style: {
+                                                color: 'black',
+                                                background: 'red'
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        };
+
+                        const chart = new ApexCharts(document.querySelector("#chartArea"), options);
+                        chart.render();
+                    })
+                    .catch(error => console.error('Error fetching rain data:', error));
+            })
+            .catch(error => console.error('Error fetching stations:', error));
+    </script>
+
+</body>
+
+</html>

@@ -1,37 +1,21 @@
 <template>
     <div class="container">
         <div class="menu-container">
-            <el-menu class="el-menu-vertical-demo" default-active="3" @open="handleOpen" @close="handleClose">
+            <el-menu class="el-menu-vertical-demo" default-active="2" @open="handleOpen" @close="handleClose">
 
-
-                <el-sub-menu index="1">
-                    <template #title>
-                        <el-icon>
-                            <location />
-                        </el-icon>
-                        <span>最大淹没情况</span>
-                    </template>
-                    <router-link to="/function21" class="menu-link"><el-menu-item
-                            index="1-1">水深</el-menu-item></router-link>
-                    <router-link to="/function22" class="menu-link"><el-menu-item
-                            index="1-2">范围</el-menu-item></router-link>
-
-                </el-sub-menu>
-
-
-                <router-link to="/function1" class="menu-link">
+                <router-link to="/forecasting" class="menu-link">
                     <el-menu-item index="2">
-                        <el-icon><icon-menu /></el-icon>
-                        <span>特大淹没概率</span>
+                        <el-icon><setting /></el-icon>
+                        <span>淹没预测</span>
                     </el-menu-item>
                 </router-link>
 
-                <router-link to="/function3" class="menu-link">
+                <router-link to="/modeling" class="menu-link">
                     <el-menu-item index="3">
                         <el-icon>
-                            <setting />
+                            <icon-menu />
                         </el-icon>
-                        <span>淹没情况模拟</span>
+                        <span>实时监测预警</span>
                     </el-menu-item>
                 </router-link>
 
