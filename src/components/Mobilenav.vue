@@ -5,7 +5,9 @@
 
                 <router-link to="/forecasting" class="menu-link">
                     <el-menu-item index="2">
-                        <el-icon><setting /></el-icon>
+                        <el-icon>
+                            <setting />
+                        </el-icon>
                         <span>淹没预测</span>
                     </el-menu-item>
                 </router-link>
@@ -56,4 +58,8 @@ const handleClose = (key: string, keyPath: string[]) => {
 .el-menu-vertical-demo {
     border: none;
 }
-</style>
+
+a {
+    text-decoration: none;
+    /* 去除所有链接的下划线 */
+}</style>

@@ -3,7 +3,8 @@
   <div v-if="isDesktop">
     <!-- 电脑端的导航菜单内容 -->
     <div class="header-container">
-      <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+      <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :ellipsis="false"
+        @select="handleSelect">
 
         <div class="logo-container">
           <div class="logo">
@@ -31,7 +32,7 @@
           </el-menu-item>
         </router-link>
 
-         <router-link to="/modeling" class="menu-link">
+        <router-link to="/modeling" class="menu-link">
           <el-menu-item index="3" class="el-menu">
             <div class="block">
               <div class="role1_cn">
@@ -42,7 +43,7 @@
             </div>
           </el-menu-item>
         </router-link>
-       <!--  <a href="/src/components/test6.html" class="menu-link">
+        <!--  <a href="/src/components/test6.html" class="menu-link">
           <el-menu-item index="3" class="el-menu">
             <div class="block">
               <div class="role1_cn">
@@ -91,7 +92,7 @@
       </div>
       <div class="right-section">
         <!-- 右侧扩展面板按钮 -->
-        <button class="expand-btn" @click="toggleSidebar">
+        <button class="expand-btn" @click="toggleSidebar" :class="{ 'opened': sidebarOpen, 'closed': !sidebarOpen }">
           <el-icon class="expand-icon">
             <!-- 使用条件语句根据侧边栏状态渲染不同的图标 -->
             <i v-if="!sidebarOpen" class="menu-icon">
@@ -173,10 +174,13 @@ onBeforeUnmount(() => {
     position: relative;
     display: contents;
     justify-content: space-between;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 阴影效果 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* 阴影效果 */
   }
-  .head{
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 阴影效果 */
+
+  .head {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* 阴影效果 */
   }
 
 
@@ -219,7 +223,7 @@ onBeforeUnmount(() => {
   }
 
   .flex-grow {
-    flex-grow: 10;
+    flex-grow: 1;
   }
 
   .block {
@@ -257,6 +261,11 @@ onBeforeUnmount(() => {
     color: #109cb8;
     padding-left: 17px;
     font-family: Arial, Helvetica, sans-serif;
+  }
+
+  a {
+    text-decoration: none;
+    /* 去除所有链接的下划线 */
   }
 
   .time-container {
@@ -335,7 +344,7 @@ onBeforeUnmount(() => {
     /* 设置相对定位 */
     z-index: 999;
     /* 确保导航栏位于顶层 */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
   }
 
   .left-section {
@@ -380,6 +389,15 @@ onBeforeUnmount(() => {
     background: none;
     border: none;
     cursor: pointer;
+    transition: all 0.15s ease;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .expand-btn.opened {
+    /* 修改背景色 */
+    transform: rotate(-90deg);
+    /* 旋转按钮 */
   }
 
   .expand-icon {
@@ -388,6 +406,7 @@ onBeforeUnmount(() => {
     margin-left: 5px;
     /* 调整图标与按钮之间的间距 */
     /* 其他样式 */
+    color: #fff;
   }
 
   /* 侧边栏样式 */

@@ -50,10 +50,9 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue';
 import mapboxgl from 'mapbox-gl';
-import ApexCharts from 'apexcharts';
 
 const mapContainer = ref<HTMLElement | null>(null);
-const chartInstance = ref<ApexCharts | null>(null); // 用于存储图表实例
+const chartInstance = ref<any | null>(null); // 用于存储图表实例
 
 const mapboxToken = 'pk.eyJ1IjoiMTA2MzgxNjE3OCIsImEiOiJjbGhyZzRnbjMwZGtrM2VzaTg4a3Z1d2I1In0.G4AQfmjpfeOjf7YJVytWhA';
 mapboxgl.accessToken = mapboxToken;
@@ -80,7 +79,10 @@ const initMap = (station: Station) => {
     map.addControl(new mapboxgl.NavigationControl());
 };
 
-const renderChart = (station: Station, precipitationData: number[], timestamps: string[]) => {
+const renderChart = async (station: Station, precipitationData: number[], timestamps: string[]) => {
+    // 动态导入 ApexCharts
+    const { default: ApexCharts } = await import('apexcharts');  // 动态导入
+
     // 销毁旧的图表实例
     if (chartInstance.value) {
         chartInstance.value.destroy();
