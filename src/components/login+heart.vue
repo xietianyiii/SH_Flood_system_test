@@ -16,9 +16,9 @@
                 <div class="card-content">
                     <div class="input-container">
                         <el-icon :size="21" class="input-icon">
-                            <Message />
+                            <User />
                         </el-icon>
-                        <input type="text" class="custom-input" v-model="email" placeholder="Email address">
+                        <input type="text" class="custom-input" v-model="email" placeholder="Account">
                     </div>
 
                     <div class="input-container">

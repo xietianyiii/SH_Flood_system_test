@@ -63,7 +63,7 @@
 
                                 <!-- 第2行：水位等级 -->
                                 <div class="level-selector-row">
-                                    <span class="level-label">水位</span>
+                                    <span class="level-label">上游洪水</span>
                                     <div class="dotted-line-container">
                                         <span class="dotted-line"></span>
                                         <div class="level-selector">
@@ -79,9 +79,27 @@
                                     </div>
                                 </div>
 
-                                <!-- 第3行：潮位等级 -->
+                                <!-- 第3行：风暴增水等级 -->
                                 <div class="level-selector-row">
-                                    <span class="level-label">潮位</span>
+                                    <span class="level-label">风暴增水</span>
+                                    <div class="dotted-line-container">
+                                        <span class="dotted-line"></span>
+                                        <div class="level-selector">
+                                            <div v-for="(level, index) in levels" :key="index"
+                                                :class="['level-item', { 'selected': selectedStormLevel === index }]"
+                                                @click="selectStormLevel(index)">
+                                                <span class="level-tag">{{ level.label }}</span> <!-- 小标签 -->
+                                                <span class="circle">
+                                                    <span v-if="selectedStormLevel === index" class="inner-circle"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 第4行：潮汐等级 -->
+                                <div class="level-selector-row">
+                                    <span class="level-label">潮汐</span>
                                     <div class="dotted-line-container">
                                         <span class="dotted-line"></span>
                                         <div class="level-selector">
@@ -96,6 +114,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
 
@@ -565,7 +584,8 @@ const selectTab = (index) => {
 
 const selectedRainLevel = ref(2); // 默认选择的降雨等级
 const selectedWaterLevel = ref(1); // 默认选择的水位等级
-const selectedTideLevel = ref(0); // 默认选择的潮位等级
+const selectedTideLevel = ref(0); // 默认选择的潮汐等级
+const selectedStormLevel = ref(0); // 默认选择的风暴增水等级
 
 const levels = ref([
     { label: '1' },
@@ -590,17 +610,23 @@ const selectTideLevel = (index) => {
     emitSelectChange();
 };
 
+const selectStormLevel = (index) => {
+    selectedStormLevel.value = index;
+    emitSelectChange();
+};
+
 // Emit the selectChange event when any level is updated
 const emitSelectChange = () => {
-    const levels = [selectedRainLevel.value + 1, selectedWaterLevel.value + 1, selectedTideLevel.value + 1];
+    const levels = [selectedRainLevel.value + 1, selectedWaterLevel.value + 1, selectedStormLevel.value + 1, selectedTideLevel.value + 1];
     emits('selectChange', levels); // 使用 emit 触发事件
 };
 
 const handleGenerateMap2 = () => {
     confirmLevel();  // Display a notification of the selected levels
-    const levels = [selectedRainLevel.value + 1, selectedWaterLevel.value + 1, selectedTideLevel.value + 1];
-    const multiplicationResult = levels.reduce((acc, level) => acc * level, 1);
-
+    const levels = [selectedRainLevel.value + 1, selectedWaterLevel.value + 1,((selectedStormLevel.value + 1)*0.6 + (selectedTideLevel.value + 1)*0.4)];
+    let multiplicationResult = levels.reduce((acc, level) => acc * level, 1);
+    
+    multiplicationResult = Math.round(multiplicationResult);
     emits('confirm', multiplicationResult);  // 使用 emit 触发 confirm 事件并传递结果
     emits('generateMap2');  // 使用 emit 触发 generateMap2 事件
 
@@ -608,7 +634,7 @@ const handleGenerateMap2 = () => {
 
 const confirmLevel = () => {
     ElNotification({
-        message: `待生成的地图等级为P${selectedRainLevel.value + 1}_R${selectedWaterLevel.value + 1}_T${selectedTideLevel.value + 1}`,
+        message: `待生成的地图等级为P${selectedRainLevel.value + 1}_R${selectedWaterLevel.value + 1}_S${selectedStormLevel.value + 1}_T${selectedTideLevel.value + 1}`,
         type: 'success',
     });
 };

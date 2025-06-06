@@ -183,6 +183,9 @@ onBeforeUnmount(() => {
     /* 阴影效果 */
   }
 
+  .el-menu-demo{
+    height: 8vh;
+  }
 
   .logo-container {
     color: #fff;

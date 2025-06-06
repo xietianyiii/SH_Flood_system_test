@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据展示组件</title>
+    <style>
+        /* 仪表盘外层 */
+        .dashboard-item {
+            position: absolute;
+            top: 200px;
+            left: 500px;
+            width: 316px;
+            height: 216px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 标题栏 */
+        .dashboard-header {
+            margin-top: -20px; 
+            padding: 2px 16px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: left;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* 主要数字 */
+        .main-number {
+            font-size: 68px;
+            font-weight: bold;
+            color: #0a6cff;
+            margin-top: 20px;
+            cursor: pointer; /* 让鼠标悬停时显示手型 */
+            transition: transform 0.2s ease-in-out; /* 添加点击动画 */
+        }
+
+        .main-number:active {
+            transform: scale(0.9); /* 点击时缩小效果 */
+        }
+
+        /* 说明文字 */
+        .description {
+            font-size: 18px;
+            color: #367be3;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 仪表盘组件 -->
+    <div class="dashboard-item">
+        <div class="dashboard-header">游戏公司主体数🔥</div>
+        <div class="main-number" id="number">8343</div>
+        <div class="description">个</div>
+    </div>
+
+    <script>
+        // 获取数字元素
+        const numberElement = document.getElementById("number");
+
+        // 添加点击事件
+        numberElement.addEventListener("click", function() {
+            alert("当前游戏公司主体数：" + this.textContent);
+        });
+    </script>
+
+</body>
+</html>
